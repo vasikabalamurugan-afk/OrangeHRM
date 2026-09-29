@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import path from 'path';
 
 export class EmployeePage {
   readonly page: Page;
@@ -11,6 +12,7 @@ export class EmployeePage {
   readonly jobTab: Locator;
   readonly jobTitleDropdown: Locator;
   readonly employmentStatusDropdown: Locator;
+  readonly profilePicture: Locator;
   readonly jobSaveButton: Locator;
 
   constructor(page: Page) {
@@ -24,6 +26,7 @@ export class EmployeePage {
     this.jobTab = page.getByRole('link', { name: 'Job' });
     this.jobTitleDropdown = page.getByText('-- Select --').first();
     this.employmentStatusDropdown = page.getByText('-- Select --').nth(3);
+    this.profilePicture = page.locator('input[type="file"]');
     this.jobSaveButton = page.getByRole('button', { name: 'Save' });
   }
 
@@ -33,10 +36,12 @@ export class EmployeePage {
     await this.addEmployeeMenu.click();
   }
   async addEmployee(firstName: string, lastName: string, employeeId: string): Promise<void> {
+    const profile_pic = path.join(process.cwd(),'test-data','Profile_pic.png');
     await this.firstNameInput.fill(firstName);
     await this.lastNameInput.fill(lastName);
     await this.employeeIdInput.fill(employeeId);
-    await this.page.waitForTimeout(5000);
+    // await this.page.waitForTimeout(3000);
+    await this.profilePicture.setInputFiles(profile_pic);
     await this.saveButton.click();
     await this.page.waitForLoadState('networkidle');
     await expect(this.page,'Employee should be redirected to Personal Details after saving').toHaveURL(/\/pim\/viewPersonalDetails\/empNumber\/\d+/, {timeout: 15000});
@@ -58,13 +63,13 @@ export class EmployeePage {
     await qaEngineerOption.scrollIntoViewIfNeeded();
     await qaEngineerOption.click();
     // Employment Status
-    // await this.employmentStatusDropdown.click();
-    // await this.page.getByText('Freelance', { exact: true }).click();
+    await this.employmentStatusDropdown.click();
+    await this.page.getByText('Freelance', { exact: true }).click();
     await this.jobSaveButton.click();
   }
 
   async verifyJobDetails(): Promise<void> {
-    // await expect(this.page.getByText('Freelancer', { exact: true })).toBeVisible();
-    await expect(this.page.getByText('Account Assistant', { exact: true })).toHaveText('Account Assistant');
+    await expect(this.page.getByText('Freelance', { exact: true })).toBeVisible();
+    // await expect(this.page.getByText('Account Assistant', { exact: true })).toHaveText('Account Assistant');
 }
 }

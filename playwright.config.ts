@@ -15,6 +15,7 @@ export default defineConfig({
 
   use: {
     baseURL: process.env.BASE_URL,
+    headless: process.env.headless !== 'false',
     video: 'on',
     screenshot: 'only-on-failure',
     trace: 'retain-on-failure'
