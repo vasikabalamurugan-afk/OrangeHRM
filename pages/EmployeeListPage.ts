@@ -33,8 +33,9 @@ export class EmployeeListPage {
   async searchAndDeleteEmployee(employeeId: string, firstName: string, lastName: string): Promise<void> {
     await this.employeeIdSearchInput.fill(employeeId);
     await this.searchButton.click();
-    // const employeeRow = this.page.locator('.oxd-table-row').filter({hasText: `${firstName} ${lastName}`});
+    const employeeRow = this.page.locator('.oxd-table-row').filter({hasText: `${firstName} ${lastName}`});
     // await employeeRow.getByRole('checkbox').check();
+    await this.page.waitForLoadState('networkidle');
     await this.deleteIcon.click();
     await this.confirmDeleteButton.click();
   }

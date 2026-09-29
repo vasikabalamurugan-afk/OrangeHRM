@@ -19,7 +19,7 @@ export class UsersAPI extends ReqResApi {
 
   async createUser(name: string, job: string) {
     const apiBaseUrl = process.env.API_BASE_URL || 'https://reqres.in/api';
-    return await this.request.post('${apiBaseUrl}/users',
+    return await this.request.post(`${apiBaseUrl}/users`,
       {
         data: {
           name,
@@ -54,6 +54,6 @@ export class UsersAPI extends ReqResApi {
 
   async deleteUser(userId: number) {
     const apiBaseUrl = process.env.API_BASE_URL || 'https://reqres.in/api';
-    return await this.request.delete(`${apiBaseUrl}/api/users/${userId}`);
+    return await this.request.delete(`${apiBaseUrl}/users/${userId}`);
   }
 }
